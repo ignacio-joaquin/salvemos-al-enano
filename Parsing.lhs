@@ -31,7 +31,7 @@ The monad of parsers
 >    (<|>) = mplus
 >
 > instance MonadPlus Parser where
->    mzero                      =  P (\_	 -> [])
+>    mzero                      =  P (\_\t -> [])
 >    p `mplus` q                =  P (\inp -> case parse p inp of
 >                                                []        -> parse q inp
 >                                                x         -> x)
@@ -112,9 +112,9 @@ Derived primitives
 > sepBy p sep                   =  sepBy1 p sep <|> return []
 >
 > sepBy1                        :: Parser a -> Parser sep -> Parser [a]
-> sepBy1 p sep        		= do{ x <- p
->                         	    ; xs <- many (sep >> p)
->                         	    ; return (x:xs) }
+> sepBy1 p sep         		= do{ x <- p
+>                          	    ; xs <- many (sep >> p)
+>                          	    ; return (x:xs) }
 >
 > endBy1                        :: Parser a -> Parser sep -> Parser [a]
 > endBy1 p sep                  = many1 (do { x <- p; sep; return x })
@@ -122,9 +122,8 @@ Derived primitives
 > endBy                         :: Parser a -> Parser sep -> Parser [a]
 > endBy p sep                   	= many (do{ x <- p; sep; return x })
 >
-
 Ignoring spacing
-----------------
+-----------------
 
 > token                         :: Parser a -> Parser a
 > token p                       =  do space
@@ -143,4 +142,3 @@ Ignoring spacing
 >
 > symbol                        :: String -> Parser String
 > symbol xs                     =  token (string xs)
->
