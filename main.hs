@@ -2,7 +2,7 @@ module Main where
 
 import System.IO
 -- no System.Exit: avoid ExitSuccess exception when run inside GHCi
-import AlgebraBasica (parseYCalcular)
+import Algebra (parseYCalcular)
 
 main :: IO ()
 main = do
@@ -21,6 +21,6 @@ loop = do
     _ -> do
       case parseYCalcular linea of
         Left err -> putStrLn ("Error: " ++ err)
-        Right v  -> putStrLn (show v)
+        Right v  -> putStrLn v
       loop
 
