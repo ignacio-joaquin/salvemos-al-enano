@@ -1,7 +1,7 @@
 module Main where
 
 import System.IO
-import System.Exit (exitSuccess)
+-- no System.Exit: avoid ExitSuccess exception when run inside GHCi
 import AlgebraBasica (parseYCalcular)
 
 main :: IO ()
@@ -16,7 +16,7 @@ loop = do
   hFlush stdout
   linea <- getLine
   case linea of
-    ":quit" -> putStrLn "Adiós." >> exitSuccess
+    ":quit" -> putStrLn "Adiós." >> return ()
     "" -> loop
     _ -> do
       case parseYCalcular linea of

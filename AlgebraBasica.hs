@@ -5,7 +5,6 @@ module AlgebraBasica
 import Parsing
 import Control.Applicative hiding (many, some)
 import Data.Char
-import Control.Applicative ((<|>))
 
 -- AST
 data Expr = Num Double
@@ -51,13 +50,10 @@ number :: Parser Expr
 number = token $ do
   s <- sign
   whole <- many1 digit
-  frac <- (do char '.'
-               dec <- many1 digit
-               return ('.':dec)) <|> return ""
+  frac <- (do { char '.'; dec <- many1 digit; return ('.':dec) }) <|> return ""
   let txt = whole ++ frac
   return (Num (s * read txt))
-  where
-    sign = (do char '-'; return (-1.0)) <|> (do char '+'; return 1.0) <|> return 1.0
+ 
 
 -- Evaluate AST with error handling
 eval :: Expr -> Either String Double
@@ -74,6 +70,10 @@ eval (Mul a b) = do x <- eval a
 eval (Div a b) = do x <- eval a
                     y <- eval b
                     if y == 0 then Left "Error: división por cero" else return (x / y)
+
+-- Sign parser (top-level)
+sign :: Parser Double
+sign = (do char '-'; return (-1.0)) <|> (do char '+'; return 1.0) <|> return 1.0
 
 -- Public: parse string and compute value
 parseYCalcular :: String -> Either String Double
